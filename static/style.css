@@ -203,6 +203,14 @@ select.form-control {
   background-position: right 12px center;
 }
 
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -258,37 +266,78 @@ th, td {
   .sidebar {
     width: 100%;
     height: auto;
-    position: sticky; /* CHANGÉ : Reste bloqué en haut au scrolle */
+    position: sticky;
     top: 0;
     left: 0;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+    padding: 12px 20px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     z-index: 1000;
-    background: rgba(19, 24, 35, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(11, 14, 20, 0.98);
+    backdrop-filter: blur(15px);
   }
 
   .brand {
     margin-bottom: 0;
+    font-size: 1.1rem;
   }
 
   .nav-links {
     flex-direction: row;
-    gap: 4px;
+    gap: 8px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 
   .main-content {
     margin-left: 0;
-    padding: 24px;
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-group, .form-group.third {
+    grid-column: span 1;
   }
 }
 
 @media (max-width: 600px) {
   .nav-links a span {
     display: none;
+  }
+  
+  .nav-links a {
+    padding: 10px;
+  }
+
+  .brand span {
+    display: none;
+  }
+
+  .glass-card {
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  #chatbot-container {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  #chat-window {
+    width: calc(100vw - 40px);
+    right: 0;
   }
 }
