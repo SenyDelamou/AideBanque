@@ -1,0 +1,270 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="landing-page-container">
+    <!-- Navbar FIXÉE pour la Landing Page -->
+    <nav class="landing-nav">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="ph ph-bank" style="color: white;"></i>
+            </div>
+            <span class="brand-text">AideBanque</span>
+        </div>
+        <div class="nav-links-landing">
+            <a href="{% url 'dashboard' %}" class="btn-primary-sm">Lancer l'Espace Pro</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">Propulsé par Gemini 2.5 Flash & Logistic Regression</div>
+        <h1 class="hero-title">L'Intelligence Artificielle au Service du Crédit</h1>
+        <p class="hero-subtitle">
+            Optimisez vos décisions financières avec AideBanque. Une plateforme premium utilisant le Machine Learning pour évaluer les risques en quelques secondes.
+        </p>
+        
+        <div class="hero-actions">
+            <a href="{% url 'predict_form' %}" class="btn btn-primary">
+                Nouvelle Simulation <i class="ph ph-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Floating Abstract Background Decoration -->
+        <div class="bg-blur-circle circle-1"></div>
+        <div class="bg-blur-circle circle-2"></div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="feature-grid">
+            <div class="glass-card feature-item">
+                <div class="feature-icon"><i class="ph ph-lightning"></i></div>
+                <h3>Analyse Instantanée</h3>
+                <p class="text-muted">Évaluation immédiate des dossiers grâce à notre algorithme de régression logistique haute performance.</p>
+            </div>
+            <div class="glass-card feature-item">
+                <div class="feature-icon"><i class="ph ph-sparkle"></i></div>
+                <h3>Expertise Gemini</h3>
+                <p class="text-muted">Génération automatique de notes de synthèse professionnelles par l'IA générative Google.</p>
+            </div>
+            <div class="glass-card feature-item">
+                <div class="feature-icon"><i class="ph ph-shield-check"></i></div>
+                <h3>Confidentialité Totale</h3>
+                <p class="text-muted">Vos données ne sont pas conservées. Nous traitons les informations uniquement pour le calcul du score en temps réel.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works Section -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="section-header">
+            <h2>Comment ça marche ?</h2>
+            <p class="text-muted">Un processus simple en trois étapes.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-item">
+                <span class="step-number">01</span>
+                <div>
+                    <h4>Saisie</h4>
+                    <p class="text-muted">Remplissez le profil financier du client.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <span class="step-number">02</span>
+                <div>
+                    <h4>Scoring</h4>
+                    <p class="text-muted">Calcul de probabilité en temps réel.</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <span class="step-number">03</span>
+                <div>
+                    <h4>Rapport</h4>
+                    <p class="text-muted">Gemini rédige la note d'analyse.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <p class="text-muted">© 2026 AideBanque - Système Expert de Scoring</p>
+    </footer>
+</div>
+
+<style>
+.landing-page-container {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.landing-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 260px;
+    z-index: 1000;
+    background: rgba(11, 14, 20, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.nav-links-landing {
+    display: flex;
+    align-items: center;
+}
+
+.btn-primary-sm {
+    background: var(--brand-gradient);
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+}
+
+.hero-badge {
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--brand-primary);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 24px;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.hero-actions .btn {
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+}
+
+.features-section {
+    padding: 60px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.how-it-works-section {
+    padding: 80px 24px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin: 40px 24px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.step-item {
+    display: flex;
+    gap: 20px;
+}
+
+.step-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.05);
+}
+
+.landing-footer {
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.bg-blur-circle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.15;
+}
+
+.circle-1 { top: 10%; right: 10%; background: var(--brand-primary); }
+.circle-2 { bottom: 20%; left: 10%; background: var(--success); }
+
+/* ================================= RESPONSIVE ============================ */
+@media (max-width: 900px) {
+    .landing-nav {
+        left: 0;
+        padding: 12px 20px;
+        border-left: none;
+    }
+    .brand-text {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-nav {
+        padding: 12px 16px;
+    }
+    .brand-icon {
+        width: 28px;
+        height: 28px;
+    }
+    .brand-text {
+        font-size: 1rem;
+    }
+    .btn-primary-sm {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    .hero-title {
+        font-size: 1.8rem;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,19 @@
+# Django
+*.py[cod]
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Environnement
+.env
+venv/
+env/
+
+# Modèles ML (optionnel, selon la taille)
+# Si le fichier .pkl est très gros (>50Mo), il vaut mieux utiliser Git LFS
+# modele_regression_logistique_le_plus_performant.pkl
+
+# OS
+.DS_Store
+Thumbs.db

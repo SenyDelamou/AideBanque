@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<header style="margin-bottom: 40px;">
+    <h1>Nouvelle Simulation</h1>
+    <p class="text-muted">Analysez l'éligibilité au crédit grâce à nos algorithmes prédictifs</p>
+</header>
+
+<div class="glass-card" style="max-width: 900px; margin-bottom: 80px;">
+    <div style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); padding: 12px 20px; border-radius: 8px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary);">
+        <i class="ph ph-shield-check" style="color: var(--brand-primary); font-size: 1.2rem;"></i>
+        <span><strong>Confidentialité :</strong> Vos données sont traitées de manière éphémère pour l'analyse et ne sont pas conservées de manière permanente dans nos systèmes centraux.</span>
+    </div>
+
+    <form method="post" action="{% url 'predict_form' %}">
+        {% csrf_token %}
+        
+        <!-- SECTION 1: PROFIL DU CLIENT -->
+        <div class="form-section-title">
+            <i class="ph ph-user"></i> Profil du Demandeur
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>Nom Complet du Client</label>
+                <input type="text" name="full_name" class="form-control" required placeholder="Ex: Jean-Marc Delamou">
+            </div>
+            
+            <div class="form-group third">
+                <label>Genre</label>
+                <select name="gender" class="form-control" required>
+                    <option value="Male">Homme</option>
+                    <option value="Female">Femme</option>
+                </select>
+            </div>
+            
+            <div class="form-group third">
+                <label>Statut Marital</label>
+                <select name="married" class="form-control" required>
+                    <option value="No">Célibataire / Divorcé</option>
+                    <option value="Yes">Marié(e)</option>
+                </select>
+            </div>
+
+            <div class="form-group third">
+                <label>Personnes à charge</label>
+                <select name="dependents" class="form-control" required>
+                    <option value="0">Aucune</option>
+                    <option value="1">1 personne</option>
+                    <option value="2">2 personnes</option>
+                    <option value="3+">3 ou plus</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Niveau d'Éducation</label>
+                <select name="education" class="form-control" required>
+                    <option value="Graduate">Diplômé (Bac+)</option>
+                    <option value="Not Graduate">Non Diplômé</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Zone de Résidence</label>
+                <select name="property_area" class="form-control" required>
+                    <option value="Urban">Urbain (Ville)</option>
+                    <option value="Semiurban">Semi-urbain (Périphérie)</option>
+                    <option value="Rural">Rural (Campagne)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- SECTION 2: SITUATION FINANCIÈRE -->
+        <div class="form-section-title">
+            <i class="ph ph-wallet"></i> Données Financières
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Travailleur Indépendant ?</label>
+                <select name="self_employed" class="form-control" required>
+                    <option value="No">Non (Salarié)</option>
+                    <option value="Yes">Oui (Freelance / Chef d'entreprise)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Historique de Crédit</label>
+                <select name="credit_history" class="form-control" required>
+                    <option value="1.0">Favorable (Pas de défaut récent)</option>
+                    <option value="0.0">Défavorable (Historique de défaut)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Revenu Mensuel ($)</label>
+                <input type="number" step="0.01" name="applicant_income" class="form-control" required placeholder="Ex: 4500">
+            </div>
+
+            <div class="form-group">
+                <label>Revenu Co-demandeur ($)</label>
+                <input type="number" step="0.01" name="coapplicant_income" class="form-control" required placeholder="0 si aucun" value="0">
+            </div>
+        </div>
+
+        <!-- SECTION 3: PARAMÈTRES DU PRÊT -->
+        <div class="form-section-title">
+            <i class="ph ph-bank"></i> Détails du Prêt Sollicité
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Montant du Prêt (en k$)</label>
+                <input type="number" step="0.1" name="loan_amount" class="form-control" required placeholder="Ex: 150 (pour 150.000$)">
+            </div>
+
+            <div class="form-group">
+                <label>Durée du Remboursement (Jours)</label>
+                <input type="number" name="loan_amount_term" class="form-control" required placeholder="Ex: 360" value="360">
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;">
+                <i class="ph ph-cpu"></i> Lancer l'Analyse IA
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

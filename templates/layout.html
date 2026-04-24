@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AideBanque - Aide à la Décision</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icones (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Graphiques (Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="ph ph-bank" style="color: white; font-size: 1.2rem;"></i>
+            </div>
+            <span>AideBanque</span>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li>
+                    <a href="{% url 'landing' %}" class="{% if request.resolver_match.url_name == 'landing' %}active{% endif %}">
+                        <i class="ph ph-presentation"></i> <span>Présentation</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="ph ph-squares-four"></i> <span>Tableau de Bord</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'predict_form' %}" class="{% if request.resolver_match.url_name == 'predict_form' %}active{% endif %}">
+                        <i class="ph ph-magic-wand"></i> <span>Simulation</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 16px; border-radius: 8px; margin-bottom: 24px; background: rgba(255,255,255,0.1); border-left: 4px solid var(--brand-primary);">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- CHATBOT WIDGET -->
+    <div id="chatbot-container" style="position: fixed; bottom: 30px; right: 30px; z-index: 2000;">
+        <button id="chat-toggle" style="width: 60px; height: 60px; border-radius: 50%; background: var(--brand-gradient); border: none; cursor: pointer; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; transition: transform 0.3s ease;">
+            <i class="ph ph-chat-circle-dots"></i>
+        </button>
+
+        <div id="chat-window" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md); flex-direction: column; overflow: hidden; box-shadow: var(--shadow-premium);">
+            <div style="background: var(--surface-light); padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 10px; height: 10px; background: var(--success); border-radius: 50%;"></div>
+                    <span style="font-weight: 600; font-size: 0.9rem;">Assistant AideBanque</span>
+                </div>
+                <button id="chat-close" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;"><i class="ph ph-x"></i></button>
+            </div>
+            
+            <div id="chat-messages" style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+                <div style="background: var(--surface-light); padding: 10px 15px; border-radius: 12px 12px 12px 0; max-width: 80%; font-size: 0.85rem; align-self: flex-start;">
+                    Bonjour ! Je suis l'IA AideBanque. Comment puis-je vous aider aujourd'hui ?
+                </div>
+            </div>
+
+            <div style="padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
+                <input type="text" id="chat-input" placeholder="Posez une question..." style="flex: 1; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 50px; padding: 10px 15px; color: white; font-size: 0.85rem; outline: none;">
+                <button id="chat-send" style="background: var(--brand-primary); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;"><i class="ph ph-paper-plane-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWindow = document.getElementById('chat-window');
+        const chatClose = document.getElementById('chat-close');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatMessages = document.getElementById('chat-messages');
+
+        chatToggle.addEventListener('click', () => {
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+            chatToggle.style.transform = chatWindow.style.display === 'none' ? 'scale(1)' : 'scale(0.8)';
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+            chatToggle.style.transform = 'scale(1)';
+        });
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            const userDiv = document.createElement('div');
+            userDiv.style.cssText = "background: var(--brand-primary); color: white; padding: 10px 15px; border-radius: 12px 12px 0 12px; max-width: 80%; font-size: 0.85rem; align-self: flex-end;";
+            userDiv.textContent = message;
+            chatMessages.appendChild(userDiv);
+            
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Add typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.style.cssText = "background: var(--surface-light); padding: 10px 15px; border-radius: 12px 12px 12px 0; max-width: 80%; font-size: 0.85rem; align-self: flex-start; font-style: italic;";
+            typingDiv.textContent = "Analyse en cours...";
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: `message=${encodeURIComponent(message)}`
+                });
+                
+                const data = await response.json();
+                chatMessages.removeChild(typingDiv);
+
+                const botDiv = document.createElement('div');
+                botDiv.style.cssText = "background: var(--surface-light); padding: 10px 15px; border-radius: 12px 12px 12px 0; max-width: 80%; font-size: 0.85rem; align-self: flex-start;";
+                botDiv.textContent = data.reply || data.error || "Une erreur est survenue.";
+                chatMessages.appendChild(botDiv);
+            } catch (error) {
+                chatMessages.removeChild(typingDiv);
+                console.error('Chat Error:', error);
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    </script>
+</body>
+</html>

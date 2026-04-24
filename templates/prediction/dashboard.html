@@ -1,0 +1,133 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<header style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+    <div>
+        <h1>Tableau de Bord</h1>
+        <p class="text-muted">Aperçu analytique des demandes de crédit</p>
+    </div>
+    {% if total_count > 0 %}
+    <form method="post" action="{% url 'delete_all' %}" onsubmit="return confirm('Voulez-vous vraiment vider tout l\'historique ?');">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="background: var(--danger-bg); color: var(--danger); font-size: 0.875rem;">
+            <i class="ph ph-trash"></i> Vider l'historique
+        </button>
+    </form>
+    {% endif %}
+</header>
+
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 24px; margin-bottom: 32px;">
+    <!-- STATS CARDS -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="glass-card stat-card">
+                <span class="stat-title">Total Demandes</span>
+                <span class="stat-value">{{ total_count }}</span>
+            </div>
+            <div class="glass-card stat-card">
+                <span class="stat-title" style="color: var(--success);">Approuvés</span>
+                <span class="stat-value">{{ approved_count }}</span>
+            </div>
+            <div class="glass-card stat-card">
+                <span class="stat-title" style="color: var(--danger);">Refusés</span>
+                <span class="stat-value">{{ denied_count }}</span>
+            </div>
+        </div>
+
+        <div class="glass-card" style="flex: 1;">
+            <h3 style="margin-bottom: 24px;">Dernières Simulations</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Montant ($k)</th>
+                            <th>Score IA</th>
+                            <th>Décision</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in predictions %}
+                        <tr>
+                            <td>{{ item.full_name }}</td>
+                            <td>{{ item.loan_amount }}</td>
+                            <td>{{ item.prediction_probability|floatformat:2 }}</td>
+                            <td>
+                                {% if item.prediction_result %}
+                                <span class="badge badge-success">Approuvé</span>
+                                {% else %}
+                                <span class="badge badge-danger">Refusé</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 12px;">
+                                    <a href="{% url 'prediction_detail' item.pk %}" style="color: var(--brand-primary);"><i class="ph ph-eye"></i></a>
+                                    <a href="{% url 'delete_prediction' item.pk %}" onclick="return confirm('Supprimer ?');" style="color: var(--text-secondary);"><i class="ph ph-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" style="text-align: center; padding: 20px;">Aucune donnée.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS SIDEBAR -->
+    <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <h4 style="margin-bottom: 24px; width: 100%;">Répartition des Décisions</h4>
+        <div style="width: 100%; max-width: 250px;">
+            <canvas id="decisionChart"></canvas>
+        </div>
+        <div style="margin-top: 30px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem;">
+                <span class="text-muted">Taux d'Approbation</span>
+                <span style="color: var(--success); font-weight: 600;">
+                    {% if total_count > 0 %}{{ approved_count|add:0|floatformat:1 }}{% else %}0{% endif %}%
+                </span>
+            </div>
+            <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; width: {% if total_count > 0 %}{{ approved_count|add:0|floatformat:2 }}{% else %}0{% endif %}%; background: var(--success);"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('decisionChart').getContext('2d');
+    const decisionChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Approuvés', 'Refusés'],
+            datasets: [{
+                data: [{{ approved_count }}, {{ denied_count }}],
+                backgroundColor: ['#10B981', '#EF4444'],
+                borderColor: 'transparent',
+                hoverOffset: 10,
+                cutout: '75%'
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: true
+        }
+    });
+</script>
+
+<style>
+/* Ajustements responsive pour le dashboard avec chart */
+@media (max-width: 1100px) {
+    div[style*="grid-template-columns: 1fr 350px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

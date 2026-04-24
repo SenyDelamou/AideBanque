@@ -1,0 +1,126 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<header style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1>Résultat de l'Analyse</h1>
+        <p class="text-muted">Dossier #{{ prediction.id }} - {{ prediction.full_name }}</p>
+    </div>
+    <a href="{% url 'predict_form' %}" class="btn" style="background: var(--surface-light); color: var(--text-primary);">
+        <i class="ph ph-arrow-left"></i> Nouvelle Simulation
+    </a>
+</header>
+
+<div style="display: grid; grid-template-columns: 1fr 400px; gap: 32px;">
+    
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+        <!-- RESULT CARD -->
+        <div class="glass-card result-container" style="border-top: 4px solid {% if prediction.prediction_result %}var(--success){% else %}var(--danger){% endif %};">
+            {% if prediction.prediction_result %}
+                <div style="width: 120px; height: 120px; background: var(--success-bg); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 10px;">
+                    <i class="ph ph-check-circle" style="font-size: 4rem; color: var(--success);"></i>
+                </div>
+                <h2 style="color: var(--success); font-size: 2rem;">CRÉDIT APPROUVÉ</h2>
+            {% else %}
+                <div style="width: 120px; height: 120px; background: var(--danger-bg); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 10px;">
+                    <i class="ph ph-x-circle" style="font-size: 4rem; color: var(--danger);"></i>
+                </div>
+                <h2 style="color: var(--danger); font-size: 2rem;">CRÉDIT REFUSÉ</h2>
+            {% endif %}
+            
+            <p class="text-muted" style="max-width: 500px; margin: 0 auto;">
+                Notre algorithme de scoring a évalué ce dossier avec une probabilité de confiance de 
+                <strong>{{ prediction.prediction_probability|floatformat:2 }}%</strong>.
+            </p>
+        </div>
+
+        <!-- AI EXPLANATION -->
+        <div class="glass-card">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <div class="brand-icon" style="background: #8E44AD;"><i class="ph ph-sparkle"></i></div>
+                <h3 style="margin: 0;">Analyse de l'Expert IA (Gemini)</h3>
+            </div>
+            <div style="line-height: 1.8; color: var(--text-primary); font-size: 1.05rem; white-space: pre-wrap;">{{ prediction.explanation }}</div>
+        </div>
+    </div>
+
+    <!-- PROFILE & RADAR CHART -->
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+        <div class="glass-card">
+            <h4 style="margin-bottom: 24px;">Profil de Risque</h4>
+            <div style="width: 100%; height: 300px;">
+                <canvas id="riskRadar"></canvas>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h4 style="margin-bottom: 20px;">Détails du Client</h4>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
+                <li style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span class="text-muted">Revenu Mensuel</span>
+                    <span>{{ prediction.applicant_income }} $</span>
+                </li>
+                <li style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span class="text-muted">Montant du Prêt</span>
+                    <span>{{ prediction.loan_amount }} k$</span>
+                </li>
+                <li style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span class="text-muted">Historique Crédit</span>
+                    <span>{% if prediction.credit_history == 1.0 %}Favorable{% else %}Défavorable{% endif %}</span>
+                </li>
+                <li style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span class="text-muted">Zone</span>
+                    <span>{{ prediction.property_area }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    const radarCtx = document.getElementById('riskRadar').getContext('2d');
+    
+    // Normalisation basique pour le radar
+    const incomeScore = Math.min(({{ prediction.applicant_income }} / 10000) * 100, 100);
+    const loanScore = Math.max(100 - ({{ prediction.loan_amount }} / 500) * 100, 0);
+    const historyScore = {{ prediction.credit_history }} * 100;
+    const educationScore = "{% if prediction.education == 'Graduate' %}100{% else %}50{% endif %}";
+
+    new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Revenus', 'Capacité Emprunt', 'Historique', 'Éducation', 'Stabilité'],
+            datasets: [{
+                label: 'Profil Client',
+                data: [incomeScore, loanScore, historyScore, educationScore, 80],
+                fill: true,
+                backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                borderColor: '#3B82F6',
+                pointBackgroundColor: '#3B82F6',
+                pointBorderColor: '#fff'
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255,255,255,0.1)' },
+                    grid: { color: 'rgba(255,255,255,0.1)' },
+                    pointLabels: { color: '#94A3B8' },
+                    ticks: { display: false },
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+
+<style>
+@media (max-width: 1000px) {
+    div[style*="grid-template-columns: 1fr 400px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

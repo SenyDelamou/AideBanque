@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0B0E14" />
+            <stop offset="100%" stop-color="#131823" />
+        </linearGradient>
+        <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#F87171" />
+            <stop offset="100%" stop-color="#DC2626" />
+        </linearGradient>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <rect width="400" height="300" fill="url(#bgGrad)" rx="16" />
+    <g transform="translate(200, 150)">
+        <circle r="70" fill="url(#circleGrad)" filter="url(#glow)" fill-opacity="0.2" />
+        <circle r="50" fill="url(#circleGrad)" />
+        <path d="M-15 -15 L15 15 M15 -15 L-15 15" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" />
+    </g>
+</svg>
