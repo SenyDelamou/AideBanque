@@ -17,7 +17,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero animate-on-scroll fade-up">
         <div class="hero-badge">Propulsé par Gemini 2.5 Flash & Logistic Regression</div>
         <h1 class="hero-title">L'Intelligence Artificielle au Service du Crédit</h1>
         <p class="hero-subtitle">
@@ -38,17 +38,17 @@
     <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="feature-grid">
-            <div class="glass-card feature-item">
+            <div class="glass-card feature-item animate-on-scroll fade-up" style="transition-delay: 0.1s;">
                 <div class="feature-icon"><i class="ph ph-lightning"></i></div>
                 <h3>Analyse Instantanée</h3>
                 <p class="text-muted">Évaluation immédiate des dossiers grâce à notre algorithme de régression logistique haute performance.</p>
             </div>
-            <div class="glass-card feature-item">
+            <div class="glass-card feature-item animate-on-scroll fade-up" style="transition-delay: 0.2s;">
                 <div class="feature-icon"><i class="ph ph-sparkle"></i></div>
                 <h3>Expertise Gemini</h3>
                 <p class="text-muted">Génération automatique de notes de synthèse professionnelles par l'IA générative Google.</p>
             </div>
-            <div class="glass-card feature-item">
+            <div class="glass-card feature-item animate-on-scroll fade-up" style="transition-delay: 0.3s;">
                 <div class="feature-icon"><i class="ph ph-shield-check"></i></div>
                 <h3>Confidentialité Totale</h3>
                 <p class="text-muted">Vos données ne sont pas conservées. Nous traitons les informations uniquement pour le calcul du score en temps réel.</p>
@@ -57,7 +57,7 @@
     </section>
 
     <!-- How it works Section -->
-    <section id="how-it-works" class="how-it-works-section">
+    <section id="how-it-works" class="how-it-works-section animate-on-scroll fade-up">
         <div class="section-header">
             <h2>Comment ça marche ?</h2>
             <p class="text-muted">Un processus simple en trois étapes.</p>
@@ -265,6 +265,61 @@
     .hero-title {
         font-size: 1.8rem;
     }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .hero-actions .btn {
+        width: 100%;
+    }
 }
+
+@media (min-width: 481px) and (max-width: 900px) {
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+    }
+}
+
+@media (min-width: 901px) {
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+    }
+}
+
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach((element) => {
+        observer.observe(element);
+    });
+});
+</script>
 {% endblock %}

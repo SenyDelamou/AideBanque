@@ -14,12 +14,22 @@
 </head>
 <body>
     
-    <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">
-                <i class="ph ph-bank" style="color: white; font-size: 1.2rem;"></i>
+    <!-- Menu Toggle Button (Mobile) -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+        <i class="ph ph-list"></i>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="ph ph-bank" style="color: white; font-size: 1.2rem;"></i>
+                </div>
+                <span>AideBanque</span>
             </div>
-            <span>AideBanque</span>
+            <button class="close-sidebar" id="close-sidebar" aria-label="Close menu">
+                <i class="ph ph-x"></i>
+            </button>
         </div>
         
         <nav>
@@ -116,8 +126,8 @@
 
             // Add typing indicator
             const typingDiv = document.createElement('div');
-            typingDiv.style.cssText = "background: var(--surface-light); padding: 10px 15px; border-radius: 12px 12px 12px 0; max-width: 80%; font-size: 0.85rem; align-self: flex-start; font-style: italic;";
-            typingDiv.textContent = "Analyse en cours...";
+            typingDiv.style.cssText = "background: var(--surface-light); padding: 12px 15px; border-radius: 12px 12px 12px 0; max-width: 80%; align-self: flex-start; display: flex; gap: 4px; align-items: center;";
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot" style="animation-delay: 0.2s"></div><div class="typing-dot" style="animation-delay: 0.4s"></div>';
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -148,6 +158,28 @@
 
         chatSend.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        // Mobile Menu Logic
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeSidebar = document.getElementById('close-sidebar');
+
+        if (mobileToggle && sidebar && closeSidebar) {
+            mobileToggle.addEventListener('click', () => {
+                sidebar.classList.add('active');
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+            });
+            
+            // Close sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 900 && !sidebar.contains(e.target) && e.target !== mobileToggle && !mobileToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        }
     </script>
 </body>
 </html>

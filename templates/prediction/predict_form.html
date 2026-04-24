@@ -121,10 +121,34 @@
         </div>
 
         <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end;">
-            <button type="submit" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;">
-                <i class="ph ph-cpu"></i> Lancer l'Analyse IA
+            <button type="submit" id="submit-btn" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;">
+                <i class="ph ph-cpu"></i> <span id="submit-text">Lancer l'Analyse IA</span>
             </button>
         </div>
     </form>
 </div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('submit-text');
+    
+    // Check if form is valid before showing loader
+    if(this.checkValidity()) {
+        btn.disabled = true;
+        btn.style.opacity = '0.8';
+        btn.style.cursor = 'not-allowed';
+        btnText.innerHTML = 'Analyse en cours...';
+        
+        // Add spinner
+        const icon = btn.querySelector('i');
+        if(icon) {
+            const spinner = document.createElement('div');
+            spinner.className = 'spinner';
+            btn.insertBefore(spinner, icon);
+            icon.style.display = 'none';
+        }
+    }
+});
+</script>
 {% endblock %}
