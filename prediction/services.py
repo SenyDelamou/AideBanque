@@ -13,8 +13,8 @@ def generate_credit_explanation(prediction_obj):
 
         genai.configure(api_key=api_key)
         
-        # Mise à jour vers le modèle stable : gemini-1.5-flash (meilleur quota)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Mise à jour vers le modèle spécifié par l'utilisateur : gemini-2.5-flash
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         status = "approuvé" if prediction_obj.prediction_result else "refusé"
         confidence = f"{prediction_obj.prediction_probability * 100:.2f}%"

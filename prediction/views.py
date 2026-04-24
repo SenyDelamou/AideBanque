@@ -135,8 +135,8 @@ def chat_api(request):
         try:
             api_key = os.environ.get('GEMINI_API_KEY')
             genai.configure(api_key=api_key)
-            # Utilisation de gemini-1.5-flash pour un meilleur quota
-            model_gemini = genai.GenerativeModel('gemini-1.5-flash')
+            # Mise à jour vers gemini-2.5-flash
+            model_gemini = genai.GenerativeModel('gemini-2.5-flash')
             
             prompt = f"""
             Tu es l'assistant IA de l'application AideBanque, une plateforme de scoring de crédit.
